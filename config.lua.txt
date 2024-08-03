@@ -1,0 +1,19 @@
+Config = {}
+
+-- Time in seconds before a player can respawn
+Config.RespawnTime = 10
+
+-- Respawn locations (add as many as you want)
+Config.RespawnLocations = {
+    { x = 200.0, y = -900.0, z = 30.0 },
+    { x = 250.0, y = -1000.0, z = 30.0 },
+    { x = 300.0, y = -1100.0, z = 30.0 }
+}
+
+-- Custom death message format
+Config.DeathMessage = "Player %s has been killed."
+
+-- Respawn settings
+Config.RespawnHealth = 200
+Config.RespawnArmor = 0
+Config.RespawnWeapon = false -- Set to true if you want players to respawn with their weapons

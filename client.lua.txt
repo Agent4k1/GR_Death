@@ -1,0 +1,58 @@
+local isDead = false
+local respawnTimer = 0
+local respawnLocation = nil
+
+-- Function to display death message
+function DisplayDeathMessage(name)
+    TriggerEvent('chat:addMessage', {
+        color = {255, 0, 0},
+        multiline = true,
+        args = {string.format(Config.DeathMessage, name)}
+    })
+end
+
+-- Function to handle player death
+function onPlayerDeath()
+    if not isDead then
+        isDead = true
+        respawnTimer = Config.RespawnTime
+        local playerName = GetPlayerName(PlayerId())
+        DisplayDeathMessage(playerName)
+        Citizen.CreateThread(function()
+            while respawnTimer > 0 do
+                Citizen.Wait(1000)
+                respawnTimer = respawnTimer - 1
+                TriggerEvent('chat:addMessage', {
+                    color = {255, 255, 0},
+                    multiline = true,
+                    args = {"Respawn in " .. respawnTimer .. " seconds"}
+                })
+            end
+            if isDead then
+                RespawnPlayer()
+            end
+        end)
+    end
+end
+
+-- Function to respawn player
+function RespawnPlayer()
+    isDead = false
+    respawnLocation = Config.RespawnLocations[math.random(#Config.RespawnLocations)]
+    SetEntityCoords(PlayerPedId(), respawnLocation.x, respawnLocation.y, respawnLocation.z, false, false, false, true)
+    SetEntityHealth(PlayerPedId(), Config.RespawnHealth)
+    SetPedArmour(PlayerPedId(), Config.RespawnArmor)
+    if Config.RespawnWeapon then
+        -- Add weapons to the player if needed
+    end
+end
+
+-- Register event for player death
+AddEventHandler('baseevents:onPlayerDied', onPlayerDeath)
+
+-- Clear death state on resource stop
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        isDead = false
+    end
+end)

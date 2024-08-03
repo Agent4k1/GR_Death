@@ -1,0 +1,11 @@
+-- Server-side logic for player deaths
+-- In this example, the server script is minimal but can be expanded as needed
+
+-- Function to handle custom death logic (e.g., logging deaths)
+RegisterServerEvent('playerDied')
+AddEventHandler('playerDied', function(playerId)
+    local playerName = GetPlayerName(playerId)
+    print(string.format("Player %s has died.", playerName))
+end)
+
+-- Optional: Add functionality to log death events or manage player states
